@@ -37,7 +37,7 @@ local wheelsWarningTimeout = 0
 
 function script.update(dt)
     if timePassed == 0 then
-        addMessage("Let’s go!", 0)
+        addMessage("Haydi!", 0)
     end
 
     local player = ac.getCarState(1)
@@ -80,7 +80,7 @@ function script.update(dt)
             comboMeter = 1
         else
             if dangerouslySlowTimer == 0 then
-                addMessage("Too slow!", -1)
+                addMessage("Çok yavaş!", -1)
             end
         end
         dangerouslySlowTimer = dangerouslySlowTimer + dt
@@ -104,16 +104,16 @@ function script.update(dt)
 
                     if car.pos:closerToThan(player.pos, 2.5) then
                         comboMeter = comboMeter + 3
-                        addMessage("Very close near miss!", 1)
+                        addMessage("Çok yakından geçti!", 1)
                     else
                         comboMeter = comboMeter + 1
-                        addMessage("Near miss: bonus combo", 0)
+                        addMessage("Çok yakın!: bonus kombo", 0)
                     end
                 end
             end
 
             if car.collidedWith == 0 then
-                addMessage("Collision", -1)
+                addMessage("Çarpışma", -1)
                 state.collided = true
 
                 if totalScore > highestScore then
@@ -132,7 +132,7 @@ function script.update(dt)
                     totalScore = totalScore + math.ceil(10 * comboMeter)
                     comboMeter = comboMeter + 1
                     comboColor = comboColor + 90
-                    addMessage("Overtake", comboMeter > 20 and 1 or 0)
+                    addMessage("Sollama", comboMeter > 20 and 1 or 0)
                     state.overtaken = true
                 end
             end
@@ -278,7 +278,7 @@ local speedWarning = 0
         ui.pushStyleVar(ui.StyleVar.Alpha, speedWarning)
         ui.setCursorY(0)
         ui.pushFont(ui.Font.Main)
-        ui.textColored("Keep speed above " .. requiredSpeed .. " km/h:", colorAccent)
+        ui.textColored("Hız düşürme! " .. requiredSpeed .. " km/h:", colorAccent)
         speedMeter(ui.getCursor() + vec2(-9 * 0.5, 4 * 0.2))
 
         ui.popFont()
