@@ -21,7 +21,7 @@ local requiredSpeed = 80
 
 -- This function is called before event activates. Once it returns true, it’ll run:
 function script.prepare(dt)
-    ac.debug("speed", ac.getCarState(1).speedKmh)
+    ac.debug("hız", ac.getCarState(1).speedKmh)
     return ac.getCarState(1).speedKmh > 60
 end
 
@@ -37,14 +37,14 @@ local wheelsWarningTimeout = 0
 
 function script.update(dt)
     if timePassed == 0 then
-        addMessage("Let’s go!", 0)
+        addMessage("Haydi!", 0)
     end
 
     local player = ac.getCarState(1)
     if player.engineLifeLeft < 1 then
         if totalScore > highestScore then
             highestScore = math.floor(totalScore)
-            ac.sendChatMessage("scored " .. totalScore .. " points.")
+            ac.sendChatMessage("Skor yaptı!: " .. totalScore .. " puan.")
         end
         totalScore = 0
         comboMeter = 1
@@ -66,7 +66,7 @@ function script.update(dt)
     elseif player.wheelsOutside > 0 then
         if wheelsWarningTimeout == 0 then
         end
-        addMessage("Car is outside", -1)
+        addMessage("Araba dışarda", -1)
         wheelsWarningTimeout = 60
     end
 
@@ -74,13 +74,13 @@ function script.update(dt)
         if dangerouslySlowTimer > 3 then
             if totalScore > highestScore then
                 highestScore = math.floor(totalScore)
-                ac.sendChatMessage("scored " .. totalScore .. " points.")
+                ac.sendChatMessage("Skor yaptı!: " .. totalScore .. " puan.")
             end
             totalScore = 0
             comboMeter = 1
         else
             if dangerouslySlowTimer == 0 then
-                addMessage("Too slow!", -1)
+                addMessage("Çok yavaş!", -1)
             end
         end
         dangerouslySlowTimer = dangerouslySlowTimer + dt
@@ -104,21 +104,21 @@ function script.update(dt)
 
                     if car.pos:closerToThan(player.pos, 2.5) then
                         comboMeter = comboMeter + 3
-                        addMessage("Very close near miss!", 1)
+                        addMessage("Çok yakındı", 1)
                     else
                         comboMeter = comboMeter + 1
-                        addMessage("Near miss: bonus combo", 0)
+                        addMessage("Çok yakın: bonus kombo", 0)
                     end
                 end
             end
 
             if car.collidedWith == 0 then
-                addMessage("Collision", -1)
+                addMessage("Kaza Yaptın!", -1)
                 state.collided = true
 
                 if totalScore > highestScore then
                     highestScore = math.floor(totalScore)
-                    ac.sendChatMessage("scored " .. totalScore .. " points.")
+                    ac.sendChatMessage("Skor yaptı!: " .. totalScore .. " puan.")
                 end
                 totalScore = 0
                 comboMeter = 1
@@ -132,7 +132,7 @@ function script.update(dt)
                     totalScore = totalScore + math.ceil(10 * comboMeter)
                     comboMeter = comboMeter + 1
                     comboColor = comboColor + 90
-                    addMessage("Overtake", comboMeter > 20 and 1 or 0)
+                    addMessage("Fenasınn!!", comboMeter > 20 and 1 or 0)
                     state.overtaken = true
                 end
             end
@@ -234,17 +234,17 @@ local speedWarning = 0
             end
         end
 
-        ui.beginTransparentWindow("overtakeScore", vec2(100, 100), vec2(400 * 0.5, 400 * 0.5))
+        ui.beginTransparentWindow("Sollama Skoru", vec2(100, 100), vec2(400 * 0.5, 400 * 0.5))
         ui.beginOutline()
 
         ui.pushStyleVar(ui.StyleVar.Alpha, 1 - speedWarning)
         ui.pushFont(ui.Font.Main)
-        ui.text("Highest Score: " .. highestScore .. " pts")
+        ui.text("En Yüksek Skor: " .. highestScore .. " puan")
         ui.popFont()
         ui.popStyleVar()
 
         ui.pushFont(ui.Font.Title)
-        ui.text(totalScore .. " pts")
+        ui.text(totalScore .. " Puan!")
         ui.sameLine(0, 20)
         ui.beginRotation()
         ui.textColored(math.ceil(comboMeter * 10) / 10 .. "x", colorCombo)
@@ -278,7 +278,7 @@ local speedWarning = 0
         ui.pushStyleVar(ui.StyleVar.Alpha, speedWarning)
         ui.setCursorY(0)
         ui.pushFont(ui.Font.Main)
-        ui.textColored("Keep speed above " .. requiredSpeed .. " km/h:", colorAccent)
+        ui.textColored("" .. requiredSpeed .. " km/h ye çıkmalısın!", colorAccent)
         speedMeter(ui.getCursor() + vec2(-9 * 0.5, 4 * 0.2))
 
         ui.popFont()
